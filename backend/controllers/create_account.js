@@ -15,7 +15,7 @@ const create_account = (req, res) => {
     const name = req.body?.name;
     const email = req.body?.email;
     const password = req.body?.password;
-    const added_by = req.body?.added_by;
+    const added_by = req.userData?.id;
     const added_pass = req.body?.added_pass;
 
     // Check if we sucessfully received data in the first place
@@ -28,21 +28,21 @@ const create_account = (req, res) => {
             db.all('SELECT password FROM admins WHERE id = ?', [added_by], (err, rows) =>{
                 if(err){
                     console.error(err.message);
-                    res.status(500).send('Internal Server Error');
+                    res.status(500).send({message: 'Internal Server Error'});
                 }else if(rows.length === 0){
-                    res.status(404).send('Not Found');
+                    res.status(404).send({message: 'Not Found'});
                 }else{
                     bcrypt.compare(added_pass, rows[0].password, (err, result) => {
                         if (err) {
                             console.error(err.message);
-                            res.status(500).send('Internal Server Error');
+                            res.status(500).send({message: 'Internal Server Error'});
                         } else {
                             if(result){
                                 // Check if same id already exists
                                 db.all('SELECT * FROM admins WHERE email = ?', [email], (err, rows) => {
                                     if(err){
                                         console.error(err.message);
-                                        res.status(500).send('Internal Server Error');
+                                        res.status(500).send({message: 'Internal Server Error'});
                                     }else{
                                         if(rows.length === 0){
                                             // Carry out the process of adding a new manager
@@ -50,12 +50,12 @@ const create_account = (req, res) => {
                                             bcrypt.genSalt(Number(process.env.BCYRYPT_SALT_ROUNDS), (err, salt) =>{
                                                 if(err){
                                                     console.error(err.message);
-                                                    res.status(500).send('Internal Server Error');
+                                                    res.status(500).send({message: 'Internal Server Error'});
                                                 }else{
                                                     bcrypt.hash(password, salt, (err, hash) => {
                                                         if(err){
                                                             console.error(err.message);
-                                                            res.status(500).send('Internal Server Error');
+                                                            res.status(500).send({message: 'Internal Server Error'});
                                                         }else{
                                                             // Insertion
                                                             db.run(`INSERT INTO admins (name, email, password, added_by) 
@@ -64,9 +64,9 @@ const create_account = (req, res) => {
                                                                 (err) => {
                                                                     if (err) {
                                                                         console.error(err.message);
-                                                                        res.status(500).send('Internal Server Error');
+                                                                        res.status(500).send({message: 'Internal Server Error'});
                                                                     }else{
-                                                                        res.status(200).send('Admin added successfully');
+                                                                        res.status(200).send({message: 'Admin added successfully'});
                                                                     }
                                                             });
                                                         }
@@ -74,12 +74,12 @@ const create_account = (req, res) => {
                                                 }
                                             });
                                         }else{
-                                            res.status(409).send('An ID already exists');
+                                            res.status(409).send({message: 'An ID already exists'});
                                         }
                                     }
                                 })
                             }else{
-                                res.status(401).send('Access Denied');
+                                res.status(401).send({message: 'Access Denied'});
                             }
                         }
                     })
@@ -88,10 +88,10 @@ const create_account = (req, res) => {
             
         }else{
             // If email is invalid
-            res.status(400).send('Enter Email Correctly');
+            res.status(400).send({message: 'Enter Email Correctly'});
         }
     }else{
-        res.status(400).send('Insufficient Data');
+        res.status(400).send({message: 'Insufficient Data'});
     }
 };
 module.exports = create_account;

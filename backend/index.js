@@ -1,6 +1,7 @@
 // Requiring packages
 const express = require('express');
-const sqlite3 = require('sqlite3');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 // Requiring modules
 const parking = require('./routes/parking');
@@ -9,16 +10,12 @@ const admins = require('./routes/admins');
 // Creating app
 const app = express();
 app.use(express.json());
+app.use(cors({
+    credentials: true,
+}));
+app.use(cookieParser());
 
-// Handling Database
-// const db = new sqlite3.Database('./database.db', (err) => {
-//     if (err) {
-//         console.error(err.message);
-//     }
-//     console.log('Connected to the SQLite database.');
-// });
-
-// setting up routes
+// Setting up routes
 app.use(admins);
 
 // Listening on port

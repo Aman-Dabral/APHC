@@ -1,22 +1,66 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router";
+import ProgressBar from "../components/ProgressBar";
 
 function Login() {
 
   // To display errors  
-  var errorStatus = false;
-
+  const [errorStatus, setErrorStatus] = useState(false);
+  const [progressBar, setProgressBar] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const submitHanderer = async (e) => {
-    // Next to be developed
+  const navigate = useNavigate();
+  const submitHandler = (e) => {
     e.preventDefault();
-    const login = await fetch(`http://localhost:3000`).then((res) => {
-      console.log(res);
+    const login = async () => {
+      setProgressBar(true);
+      return await fetch(`http://localhost:3000/admins/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          credentials: "include"
+        },
+        body: JSON.stringify({
+          email: document.getElementById("floating_email").value,
+          password: document.getElementById("floating_password").value,
+        }),
+      });
+    };
+    const loginObject = login();
+    loginObject.then(async (response) =>{
+      setProgressBar(false);
+      if(response.status === 200){ 
+        // Login Successful 
+        const res = await response.json();
+        setErrorStatus(false);
+        setErrorMessage("");
+        localStorage.setItem("APHC_JWT_TOKEN", res.token);
+        alert(res.message);
+        navigate("/admins/dashboard");
+      }else{
+        await response.json()
+        .then((res) => { 
+          // Login Failed
+          setErrorStatus(true);
+          setErrorMessage(res.message);
+        })
+        .catch((err) =>{
+          // Failure to connect to server
+          setErrorStatus(true);
+          setErrorMessage("Failed to connect");
+        });
+      }
     })
+    .catch((err) =>{
+      // Failure to connect to server
+      setProgressBar(false);
+      setErrorStatus(true);
+      setErrorMessage("Failed to connect");
+    });
   };
 
   return (
     <>
-      <form className="max-w-md my-2 border-2 h-[300px] border-gray-300 mx-3 min-[472px]:mx-auto p-4 rounded-md" onSubmit={submitHanderer}>
+      <form className="max-w-md my-2 border-2 h-[350px] border-gray-300 mx-3 min-[472px]:mx-auto p-4 rounded-md" onSubmit={submitHandler}>
         <div className="my-1 max-auto text-center">
           <h1 className="text-3xl font-bold">Login</h1>
         </div>
@@ -60,7 +104,14 @@ function Login() {
             Submit
             </button>
         </div>
-        <p id="results" className={`text-red-500 text-center mt-2 ${errorStatus ? "block" : "hidden"}`}>{errorMessage}</p>
+
+        <Link to="/admins/forgot_password" className="text-blue-700 hover:text-blue-800 hover:underline block text-center mt-2">Forgot Password</Link>
+        
+        {/* Results and Error Message */}
+        <div id="results" className={`text-red-500 text-center mt-2 ${errorStatus ? "block" : "hidden"}`}>{errorMessage}</div>
+        
+        {/* Circular progress bar */}
+        {progressBar ? <ProgressBar />: null}
       </form>
     </>
   );

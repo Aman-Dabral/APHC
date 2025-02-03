@@ -1,1 +1,23 @@
 @import "tailwindcss";
+
+.progress-bar{
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    border-width: 5px;
+    border-color: #f2f6fc;
+    border-top-color: rgb(49, 11, 176);
+    overflow: hidden;
+    animation: progress 1s infinite;
+    margin: auto;
+    margin-top: 5px;
+}
+
+@keyframes progress{
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}

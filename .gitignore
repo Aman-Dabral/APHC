@@ -3,4 +3,3 @@
 .gitignore
 name.txt
 database.db
-*tester.js
