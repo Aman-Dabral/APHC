@@ -13,15 +13,15 @@ Our project simplifies the process of parking and payment through simple QR scan
 
 ### Features for Admins
 - Login and account creation.
-    - For every admin account created it needs approval of a previous admin. This `approving admin` will be held reponsible for the account created. And subsequently, the created account shall be called one of the `node admins` of that approving admin.
+    - For every admin account created, it needs approval of a previous admin. This `approving admin` will be held reponsible for the account created. And subsequently, the created account shall be called one of the `node admins` of that approving admin.
     - Only `approving admin` and the person whom the account belongs to shall have the privilege to delete the account.
     - The admin can change their password at any time. `approving admin` shall __not__ have this privilege over their `node admins`.
 - Pardon of fares in expeptional cases.
-- View statuses all the parked lots.
+- View statuses of all the parked lots.
 
 ### Get Started
 - You must have [NodeJS](https://nodejs.org/en/download/) installed on your sytem.
-- We recommend installing [BunJS](https://bun.sh/) as a default package manager for frontend. It seems to offer much better performance than [NPM](https://www.npmjs.com/) and [Yarn](https://yarnpkg.com/).
+- We recommend installing [BunJS](https://bun.sh/) as a default package manager for frontend. It seems to offer much better performance than [npm](https://www.npmjs.com/) and [Yarn](https://yarnpkg.com/).
 Unfortunately, backend part still uses NPM.
 - Clone the repository.
 - Install the required packages.
@@ -33,7 +33,7 @@ Unfortunately, backend part still uses NPM.
     ```
     npm install
     ```
-- Create a .env file in backend directiory. Copy paste the values from [.env.example](/backend/.env.example) file of our repository. Fill in the values supporting your project.
+- Create a .env file in backend directiory. Copy paste the values from [.env.example](/backend/.env.example) file from our repository. Fill in the values supporting your project.
 - While being in backend directory go to command shell and run:
     ```
     sqlite3 database.db
@@ -44,9 +44,9 @@ Unfortunately, backend part still uses NPM.
         CREATE TABLE admins(id integer primary key, email varchar(100) not null, added_by integer, password text not null, name varchar(100));
         CREATE TABLE lots(lotId integer primary key, currentState interger not null, vehicle_for varchar(50), address text);
     ```
-- Now you have to insert something called the `Head Admin`. Apparantly, addition of each `node admin` requires an `approving admin`. So, you have to manually create an account for the first account in the system. It shall be ultimate decision maker in the system. This account shall be called `Head Admin`.  
+- Now you have to insert something called the `Head Admin`. Apparantly, addition of each `node admin` requires an `approving admin`. So, you have to manually create the first account in the system. It shall be ultimate decision maker with some exceptional powers. This account shall be called `Head Admin`.  
 [insertNode.js](/backend/insertNode.js) is an isolated file that doesn't interfere with working of other backend files. Its sole purpose is addition of `Head Admin`. You can modify and run it.  
-By simple convention the account with `id: 0` is the `Head Admin`.
+By simple convention the account with `id: 0` and `added_by: 0` is the `Head Admin`.
 - Run the server.
     - Inside the backend directory run:
     ```

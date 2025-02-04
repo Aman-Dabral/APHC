@@ -7,15 +7,13 @@ import CreateAccount from './pages/CreateAccount'
 import Dashboard from './pages/Dashboard'
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path="admins">
-          <Route index path='login' element={<Login />} />
-          <Route path='create_account' element={<CreateAccount />}></Route>
-          <Route path='dashboard' element={<Dashboard />}></Route>
-        </Route>
-      </Routes>
-    </BrowserRouter>
-  </StrictMode>,
+  <BrowserRouter>
+    <Routes>
+      <Route path="admins">
+        <Route index path='login' element={<Login />} />
+        <Route path='create_account' element={<CreateAccount />}></Route>
+        <Route path='dashboard' element={<Dashboard />}></Route>
+      </Route>
+    </Routes>
+  </BrowserRouter>,
 )

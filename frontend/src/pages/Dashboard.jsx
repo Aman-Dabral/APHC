@@ -10,7 +10,8 @@ function Dashboard() {
   // Check if user is authenticated
   useEffect(() => {
     if (userData) {
-      fetch("http://localhost:3000/admins/confirm_identity", {
+      // For Wi-Jungle only
+      fetch("http://192.168.73.23:3000/admins/confirm_identity", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,7 +52,7 @@ function Dashboard() {
   return (
     <>
       {showBoard ? (
-        <h1>{JSON.stringify(data)}</h1>
+        <h1>Welcome {data?.name}</h1>
       ) : (
         <div className="my-14 w-[100%] flex justify-center items-center">
           <ProgressBar size={2} />

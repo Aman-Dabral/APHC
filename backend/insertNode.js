@@ -21,7 +21,6 @@ const db = new sqlite3.Database('./database.db', (err) => {
                                 db.run('INSERT INTO admins (id, name, email, password, added_by) VALUES (?, ?, ?, ?, ?)', [0, "Admin1", headEmail, hash, 0], (err) => {
                                     if (err) {
                                         console.error(err.message);
-                                        // res.status(500).send('Internal Server Error');
                                     }else{
                                         console.log('Admin added successfully');
                                     }
